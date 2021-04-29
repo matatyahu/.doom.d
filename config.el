@@ -6,7 +6,7 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "John Doe"
+(setq user-full-name "Matheus Barcellos"
       user-mail-address "john@doe.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -29,35 +29,59 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org")
-(setq org-agenda-files (list "inbox.org" "projects.org" "agenda.org"))
+(after! org (setq org-directory "~/org"
+                  org-agenda-files (list "inbox.org" "projects.org" "agenda.org")
+                  ;; Capture template for inbox
+                  org-capture-templates `(("i" "Inbox" entry (file "inbox.org")
+                                           ,(concat "* TODO %?\n"
+                                                    "/Entered on/ %U"))
+                                          ("m" "Meeting" entry  (file+headline "agenda.org" "Future")
+                                           ,(concat "* %? :meeting:\n"
+                                                    "<%<%Y-%m-%d %a %H:00>>")))
+                  ;;Formatting for todo list
+                  org-agenda-hide-tags-regexp "."
+                  org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
+                                             (todo   . " ")
+                                             (tags   . " %i %-12:c")
+                                             (search . " %i %-12:c"))
+                  ;;Syntax for refiling
+                  org-refile-targets '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)"))
+                  org-refile-use-outline-path 'file
+                  org-outline-path-complete-in-steps nil
+                  org-agenda-custom-commands
+                  '(("g" "Get Things Done (GTD)"
+                     ((agenda ""
+                              ((org-agenda-start-day "-0d")
+                               (org-agenda-span 1)
+                               (org-agenda-skip-function
+                                '(org-agenda-skip-entry-if 'deadline))
+                               (org-deadline-warning-days 0)))
+                      (todo "NEXT"
+                            ((org-agenda-skip-function
+                              '(org-agenda-skip-entry-if 'deadline))
+                             (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                             (org-agenda-overriding-header "\nTasks\n")))
+                      (agenda nil
+                              ((org-agenda-start-day "-0d")
+                               (org-agenda-span 1)
+                               (org-agenda-entry-types '(:deadline))
+                               (org-agenda-format-date "")
+                               (org-deadline-warning-days 7)
+                               (org-agenda-overriding-header "\nUpcoming Deadlines")))
+                      (tags-todo "inbox"
+                                 ((org-agenda-prefix-format "  %?-12t% s")
+                                  (org-agenda-overriding-header "\nInbox\n")))
+                      (tags "CLOSED>=\"<today>\""
+                            ((org-agenda-overriding-header "\nCompleted today\n"))))))))
 
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; Capture template for inbox
-(setq org-capture-templates `(("i" "Inbox" entry (file "inbox.org")
-                             ,(concat "* TODO %?\n"
-                                      "/Entered on/ %U"))
-                              ("m" "Meeting" entry  (file+headline "agenda.org" "Future")
-                              ,(concat "* %? :meeting:\n"
-                                       "<%<%Y-%m-%d %a %H:00>>"))))
 
-;;Formatting for todo list
-(setq org-agenda-hide-tags-regexp ".")
-(setq org-agenda-prefix-format
-      '((agenda . " %i %-12:c%?-12t% s")
-        (todo   . " ")
-        (tags   . " %i %-12:c")
-        (search . " %i %-12:c")))
 
-;;Syntax for refiling
-(setq org-refile-targets
-      '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
-(setq org-refile-use-outline-path 'file)
-(setq org-outline-path-complete-in-steps nil)
+
 
 ;;Agenda shenenigans
 
