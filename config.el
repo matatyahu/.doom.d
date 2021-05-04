@@ -79,11 +79,47 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+(require `elfeed-goodies)
+(elfeed-goodies/setup)
+(setq elfeed-goodies/entry-pane-size 0.52)
+(setq elfeed-feeds (quote
+                    (;; blogs
+                     ("https://lukesmith.xyz/rss.xml" luke blog)
+                     ("https://geohot.github.io/blog/feed.xml" blog)
+                     ("https://xkcd.com/atom.xml" comic)
+                     ;; fake twitter
+                     ("https://nitter.tedomum.net/lexfridman/rss" lex twitter)
+                     ;; i use arch, btw
+                     ("https://archlinux.org/feeds/news/" arch)
+                     ;; work
+                     ("https://bibliogram.nixnet.services/u/grupocabure/rss.xml" work)
+                     ("https://bibliogram.nixnet.services/u/anjocabure/rss.xml" work)
+                     ("https://bibliogram.nixnet.services/u/joseluiz_cabure/rss.xml" work)
+                     ;; videos
+                     ("https://lukesmith.xyz/videos" luke video)
+                     ;; podcast
+                     ("https://notrelated.xyz/rss" luke podcast)
+                     )))
+
+(map! :map elfeed-search-mode-map
+      :after elfeed-search
+      [remap kill-this-buffer] "q"
+      [remap kill-buffer] "q"
+      :n doom-leader-key nil
+      :n "q" #'+rss/quit
+      :n "e" #'elfeed-update
+      :n "r" #'elfeed-search-untag-all-unread
+      :n "u" #'elfeed-search-tag-all-unread
+      :n "s" #'elfeed-search-live-filter
+      :n "RET" #'elfeed-search-show-entry
+      :n "p" #'elfeed-show-pdf
+      :n "+" #'elfeed-search-tag-all
+      :n "-" #'elfeed-search-untag-all
+      :n "S" #'elfeed-search-set-filter
+      :n "b" #'elfeed-search-browse-url
+      :n "y" #'elfeed-search-yank)
 
 
-
-
-;;Agenda shenenigans
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
