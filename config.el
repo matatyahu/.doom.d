@@ -31,17 +31,19 @@
 ;; change `org-directory'. It must be set before org loads!
 (after! org (setq org-directory "~/org"
                   org-agenda-files (list "inbox.org" "projects.org" "agenda.org")
+                  org-todo-keywords `((sequence "TODO(t)" "HOLD(h)" "NEXT(n)" "|" "DONE(d)"))
+                  org-todo-keywords-for-agenda `((sequence "TODO(t)" "HOLD(h)" "NEXT(n)" "|" "DONE(d)"))
                   ;; Capture template for inbox
                   org-capture-templates `(("i" "Inbox" entry (file "inbox.org")
                                            ,(concat "* TODO %?\n"
                                                     "/Entered on/ %U"))
-                                          ("m" "Meeting" entry  (file+headline "agenda.org" "Future")
+                                          ("m" "Meeting" entry (file+headline "agenda.org" "Future")
                                            ,(concat "* %? :meeting:\n"
                                                     "<%<%Y-%m-%d %a %H:00>>")))
                   ;;Formatting for todo list
                   org-agenda-hide-tags-regexp "."
                   org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
-                                             (todo   . " ")
+                                             (todo   . " %i %-12:c [%4e] ")
                                              (tags   . " %i %-12:c")
                                              (search . " %i %-12:c"))
                   ;;Syntax for refiling
@@ -67,7 +69,13 @@
                                (org-agenda-entry-types '(:deadline))
                                (org-agenda-format-date "")
                                (org-deadline-warning-days 7)
-                               (org-agenda-overriding-header "\nUpcoming Deadlines")))
+                               (org-agenda-overriding-header "\nUpcoming Deadlines\n")))
+                      (agenda ""
+                              ((org-agenda-start-day "-0d")
+                               (org-agenda-span 7)
+                               (org-agenda-time-grid nil)
+                               (org-agenda-entry-types `(:timestamp))
+                               (org-agenda-overriding-header "\nUpcoming Events\n")))
                       (tags-todo "inbox"
                                  ((org-agenda-prefix-format "  %?-12t% s")
                                   (org-agenda-overriding-header "\nInbox\n")))
