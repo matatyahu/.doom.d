@@ -43,11 +43,11 @@
                   ;;Formatting for todo list
                   org-agenda-hide-tags-regexp "."
                   org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
-                                             (todo   . " %i %-12:c [%4e] ")
+                                             (todo   . " %i %-12:c [%?-4e] ")
                                              (tags   . " %i %-12:c")
                                              (search . " %i %-12:c"))
                   ;;Syntax for refiling
-                  org-refile-targets '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)"))
+                  org-refile-targets '(("projects.org" :regexp . "\\(?:Roadmap\\|Tasks\\)"))
                   org-refile-use-outline-path 'file
                   org-outline-path-complete-in-steps nil
                   org-agenda-custom-commands
@@ -59,16 +59,14 @@
                                 '(org-agenda-skip-entry-if 'deadline))
                                (org-deadline-warning-days 0)))
                       (todo "NEXT"
-                            ((org-agenda-skip-function
-                              '(org-agenda-skip-entry-if 'deadline))
-                             (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                            ((org-agenda-prefix-format "  %i %-12:c [%e] ")
                              (org-agenda-overriding-header "\nTasks\n")))
                       (agenda nil
                               ((org-agenda-start-day "-0d")
                                (org-agenda-span 1)
                                (org-agenda-entry-types '(:deadline))
                                (org-agenda-format-date "")
-                               (org-deadline-warning-days 7)
+                               (org-deadline-warning-days 30)
                                (org-agenda-overriding-header "\nUpcoming Deadlines\n")))
                       (agenda ""
                               ((org-agenda-start-day "-0d")
