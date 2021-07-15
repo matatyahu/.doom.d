@@ -37,9 +37,11 @@
                   org-capture-templates `(("i" "Inbox" entry (file "inbox.org")
                                            ,(concat "* TODO %?\n"
                                                     "/Entered on/ %U"))
-                                          ("m" "Meeting" entry (file+headline "agenda.org" "Future")
-                                           ,(concat "* %? :meeting:\n"
+                                          ("e" "Event" entry (file+headline "agenda.org" "Future")
+                                           ,(concat "* %? :event:\n"
                                                     "<%<%Y-%m-%d %a %H:00>>")))
+                  ;;Contacts
+
                   ;;Formatting for todo list
                   org-agenda-hide-tags-regexp "."
                   org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
@@ -47,7 +49,8 @@
                                              (tags   . " %i %-12:c")
                                              (search . " %i %-12:c"))
                   ;;Syntax for refiling
-                  org-refile-targets '(("projects.org" :regexp . "\\(?:Roadmap\\|Tasks\\)"))
+                  org-refile-targets '(("projects.org" :regexp . "\\(?:Misc\\|Tasks\\|Version\\|On Hold\\|Archived\\)")
+                                       ("agenda.org" :regexp . "\\(?:Archived\\)"))
                   org-refile-use-outline-path 'file
                   org-outline-path-complete-in-steps nil
                   org-agenda-custom-commands
@@ -74,12 +77,17 @@
                                (org-agenda-time-grid nil)
                                (org-agenda-entry-types `(:timestamp))
                                (org-agenda-overriding-header "\nUpcoming Events\n")))
+                      (agenda ""
+                              ((org-agenda-start-day "-0d")
+                               (org-agenda-span 30)
+                               (org-agenda-time-grid nil)
+                               (org-agenda-entry-types `(:sexp))
+                               (org-agenda-show-all-dates nil)
+                               (org-agenda--show-holidays-birthdays t)
+                               (org-agenda-overriding-header "\nUpcoming Birthdays\n")))
                       (tags-todo "inbox"
                                  ((org-agenda-prefix-format "  %?-12t% s")
-                                  (org-agenda-overriding-header "\nInbox\n")))
-                      (tags "CLOSED>=\"<today>\""
-                            ((org-agenda-overriding-header "\nCompleted today\n"))))))))
-
+                                  (org-agenda-overriding-header "\nInbox\n"))))))))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
