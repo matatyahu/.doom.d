@@ -30,18 +30,19 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (after! org (setq org-directory "~/org"
-                  org-agenda-files (list "inbox.org" "projects.org" "agenda.org")
+                  org-agenda-files (list "inbox.org" "projects.org" "agenda.org" "books.org")
                   org-todo-keywords `((sequence "TODO(t)" "HOLD(h)" "NEXT(n)" "|" "DONE(d)"))
                   org-todo-keywords-for-agenda `((sequence "TODO(t)" "HOLD(h)" "NEXT(n)" "|" "DONE(d)"))
                   ;; Capture template for inbox
                   org-capture-templates `(("i" "Inbox" entry (file "inbox.org")
                                            ,(concat "* TODO %?\n"
                                                     "/Entered on/ %U"))
-                                          ("e" "Event" entry (file+headline "agenda.org" "Future")
-                                           ,(concat "* %? :event:\n"
-                                                    "<%<%Y-%m-%d %a %H:00>>")))
-                  ;;Contacts
-
+                                          ("m" "Meeting" entry (file+headline "agenda.org" "Future")
+                                           ,(concat "* %? :meeting:\n"
+                                                    "<%<%Y-%m-%d %a %H:00>>"))
+                                          ("b" "Book" entry (file+headline "books.org" "TBR")
+                                           ,(concat "* HOLD %^{Title} %^{Author}p %^{Effort}p\n"
+                                                    "/Entered on/ %U")))
                   ;;Formatting for todo list
                   org-agenda-hide-tags-regexp "."
                   org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
@@ -58,36 +59,34 @@
                      ((agenda ""
                               ((org-agenda-start-day "-0d")
                                (org-agenda-span 1)
-                               (org-agenda-skip-function
-                                '(org-agenda-skip-entry-if 'deadline))
+                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                                (org-deadline-warning-days 0)))
                       (todo "NEXT"
                             ((org-agenda-prefix-format "  %i %-12:c [%e] ")
-                             (org-agenda-overriding-header "\nTasks\n")))
+                             (org-agenda-files (file-expand-wildcards "[!books]*.org]"))
+                             (org-agenda-overriding-header "Tasks\n")))
                       (agenda nil
                               ((org-agenda-start-day "-0d")
                                (org-agenda-span 1)
                                (org-agenda-entry-types '(:deadline))
                                (org-agenda-format-date "")
                                (org-deadline-warning-days 30)
-                               (org-agenda-overriding-header "\nUpcoming Deadlines\n")))
+                               (org-agenda-overriding-header "Upcoming Deadlines\n")))
                       (agenda ""
                               ((org-agenda-start-day "-0d")
                                (org-agenda-span 7)
                                (org-agenda-time-grid nil)
                                (org-agenda-entry-types `(:timestamp))
-                               (org-agenda-overriding-header "\nUpcoming Events\n")))
-                      (agenda ""
-                              ((org-agenda-start-day "-0d")
-                               (org-agenda-span 30)
-                               (org-agenda-time-grid nil)
-                               (org-agenda-entry-types `(:sexp))
-                               (org-agenda-show-all-dates nil)
-                               (org-agenda--show-holidays-birthdays t)
-                               (org-agenda-overriding-header "\nUpcoming Birthdays\n")))
+                               (org-agenda-overriding-header "Upcoming Events\n")))
                       (tags-todo "inbox"
                                  ((org-agenda-prefix-format "  %?-12t% s")
-                                  (org-agenda-overriding-header "\nInbox\n"))))))))
+                                  (org-agenda-overriding-header "Inbox\n")))
+                      (tags-todo "books"
+                                 ((org-agenda-prefix-format "  %?-12t% s [%e] ")
+                                  (org-agenda-skip-function `(org-agenda-skip-entry-if `regexp "HOLD"))
+                                  (org-agenda-sorting-strategy `(todo-state-up))
+                                  (org-agenda-overriding-header "Books\n"))))))))
+
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -106,9 +105,6 @@
                      ;; i use arch, btw
                      ("https://archlinux.org/feeds/news/" arch)
                      ;; work
-                     ("https://bibliogram.nixnet.services/u/grupocabure/rss.xml" work)
-                     ("https://bibliogram.nixnet.services/u/anjocabure/rss.xml" work)
-                     ("https://bibliogram.nixnet.services/u/joseluiz_cabure/rss.xml" work)
                      ;; videos
                      ("https://lukesmith.xyz/videos" luke video)
                      ;; podcast
