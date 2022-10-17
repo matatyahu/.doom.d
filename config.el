@@ -50,7 +50,7 @@
                                              (tags   . " %i %-12:c")
                                              (search . " %i %-12:c"))
                   ;;Syntax for refiling
-                  org-refile-targets '(("projects.org" :regexp . "\\(?:Misc\\|Tasks\\|Version\\|On Hold\\|Archived\\)")
+                  org-refile-targets '(("projects.org" :regexp . "\\(?:Misc\\|Tasks\\|Version\\|On Hold$\\|Archived$\\)")
                                        ("agenda.org" :regexp . "\\(?:Archived\\)"))
                   org-refile-use-outline-path 'file
                   org-outline-path-complete-in-steps nil
